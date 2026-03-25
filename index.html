@@ -1,1 +1,899 @@
-<html><body><p>loading...</p></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 あなたの魂のルーツを探る 🌊 スターシード星系診断</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+        }
+        .header p {
+            font-size: 15px;
+            opacity: 0.98;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        .progress-container {
+            background: rgba(255, 255, 255, 0.3);
+            height: 12px;
+            margin: 0;
+            position: relative;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .content {
+            padding: 40px 30px;
+            min-height: 400px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .question-number {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .question-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        .option {
+            background: #f8f9ff;
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+        }
+        .option:hover {
+            background: #eef2ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+        .option-label {
+            font-weight: bold;
+            margin-right: 12px;
+            min-width: 25px;
+            font-size: 18px;
+        }
+        .option-text {
+            flex: 1;
+            font-size: 16px;
+        }
+        .button-container {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 18px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: #e0e7ff;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        /* 結果ページ */
+        .result-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .result-emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        .result-type {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .result-subtitle {
+            font-size: 22px;
+            color: #764ba2;
+            margin-bottom: 5px;
+        }
+        .result-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .result-section h3 {
+            color: #667eea;
+            font-size: 19px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .result-section h3::before {
+            content: '✨';
+            margin-right: 8px;
+        }
+        .result-section p {
+            color: #555;
+            line-height: 1.9;
+            margin-bottom: 12px;
+        }
+        .happening-section {
+            background: #fff9e6;
+            border-left: 4px solid #ffd700;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .happening-section h3 {
+            color: #f59e0b;
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+        .happening-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        .happening-list li {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        .common-closing {
+            background: linear-gradient(135deg, #f3e7ff 0%, #e7f3ff 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .common-closing h3 {
+            color: #667eea;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .common-closing p {
+            color: #555;
+            line-height: 1.9;
+            margin-bottom: 15px;
+        }
+        .common-closing .highlight {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .common-closing .highlight h4 {
+            color: #764ba2;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .common-closing .highlight ul {
+            text-align: left;
+            padding-left: 25px;
+        }
+        .common-closing .highlight li {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #ffd700;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .line-prompt {
+            background: linear-gradient(135deg, #06C755 0%, #00B900 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin-top: 35px;
+            text-align: center;
+        }
+        .line-prompt h3 {
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+        .line-prompt p {
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        .line-btn {
+            background: white;
+            color: #06C755;
+            border: none;
+            padding: 20px 45px;
+            font-size: 19px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .line-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .line-btn::before {
+            content: '📱';
+            font-size: 26px;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .content {
+                padding: 30px 20px;
+            }
+            .result-type {
+                font-size: 24px;
+            }
+            .result-subtitle {
+                font-size: 19px;
+            }
+            .option-text {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 あなたの魂のルーツを探る 🌊<br>＼ スターシード星系診断 ／</h1>
+            <p>直感で、自分に一番当てはまるものを選んでください</p>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="content">
+            <!-- イントロページ -->
+            <div class="page active" id="page-intro">
+                <div class="intro">
+                    直感で、自分に一番当てはまるものをA〜Eの中から選んでください。
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" onclick="goToPage(1)">診断を始める</button>
+                </div>
+            </div>
+            <!-- Q1 -->
+            <div class="page" id="page-1">
+                <div class="question-number">質問 1 / 5</div>
+                <div class="question-title">Q1. 子どもの頃の自分は？</div>
+                <div class="option" data-question="1" data-answer="A" onclick="selectOption(1, 'A', this)">
+                    <span class="option-label">A.</span>
+                    <span class="option-text">人の顔色や感情にとても敏感で、争いごとが極端に苦手だった</span>
+                </div>
+                <div class="option" data-question="1" data-answer="B" onclick="selectOption(1, 'B', this)">
+                    <span class="option-label">B.</span>
+                    <span class="option-text">同年代より大人びていて、宇宙や古代の歴史など目に見えない真理に惹かれていた</span>
+                </div>
+                <div class="option" data-question="1" data-answer="C" onclick="selectOption(1, 'C', this)">
+                    <span class="option-label">C.</span>
+                    <span class="option-text">集団行動や「普通はこう」というルールに縛られるのが死ぬほど嫌だった</span>
+                </div>
+                <div class="option" data-question="1" data-answer="D" onclick="selectOption(1, 'D', this)">
+                    <span class="option-label">D.</span>
+                    <span class="option-text">なぜお自信があり、グループをまとめたり論理的に考えるのが得意だった</span>
+                </div>
+                <div class="option" data-question="1" data-answer="E" onclick="selectOption(1, 'E', this)">
+                    <span class="option-label">E.</span>
+                    <span class="option-text">動物や植物、海に強い親近感があり、自然の中にいる方が安心した</span>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-primary" id="next-1" disabled onclick="goToPage(2)">次へ</button>
+                </div>
+            </div>
+            <!-- Q2 -->
+            <div class="page" id="page-2">
+                <div class="question-number">質問 2 / 5</div>
+                <div class="question-title">Q2. 人間関係でのあなたは？</div>
+                <div class="option" data-question="2" data-answer="A" onclick="selectOption(2, 'A', this)">
+                    <span class="option-label">A.</span>
+                    <span class="option-text">相手を喜ばせようと気を使いすぎて、一人になるとどっと疲れる</span>
+                </div>
+                <div class="option" data-question="2" data-answer="B" onclick="selectOption(2, 'B', this)">
+                    <span class="option-label">B.</span>
+                    <span class="option-text">狭く深く付き合うのが好きで、感情論より「事実」や「論理」で対話したい</span>
+                </div>
+                <div class="option" data-question="2" data-answer="C" onclick="selectOption(2, 'C', this)">
+                    <span class="option-label">C.</span>
+                    <span class="option-text">縛られるのが嫌いで、常に変化や旅行、新しい自由を求めている</span>
+                </div>
+                <div class="option" data-question="2" data-answer="D" onclick="selectOption(2, 'D', this)">
+                    <span class="option-label">D.</span>
+                    <span class="option-text">自分のビジョンや目標が明確で、周囲を引っ張るリーダーシップを発揮する</span>
+                </div>
+                <div class="option" data-question="2" data-answer="E" onclick="selectOption(2, 'E', this)">
+                    <span class="option-label">E.</span>
+                    <span class="option-text">独特の感性があり、音楽やアート、環境保護など自分の世界観の表現を大切にしている</span>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="goToPage(1)">戻る</button>
+                    <button class="btn btn-primary" id="next-2" disabled onclick="goToPage(3)">次へ</button>
+                </div>
+            </div>
+            <!-- Q3 -->
+            <div class="page" id="page-3">
+                <div class="question-number">質問 3 / 5</div>
+                <div class="question-title">Q3. 何かトラブルや悩み事があったとき、どうする？</div>
+                <div class="option" data-question="3" data-answer="A" onclick="selectOption(3, 'A', this)">
+                    <span class="option-label">A.</span>
+                    <span class="option-text">まず相手の気持ちに寄り添い、優しさで包み込んで解決しようとする</span>
+                </div>
+                <div class="option" data-question="3" data-answer="B" onclick="selectOption(3, 'B', this)">
+                    <span class="option-label">B.</span>
+                    <span class="option-text">冷静に状況を分析し、根本的な原因を論理的に見つけ出そうとする</span>
+                </div>
+                <div class="option" data-question="3" data-answer="C" onclick="selectOption(3, 'C', this)">
+                    <span class="option-label">C.</span>
+                    <span class="option-text">既存のやり方を壊して、全く新しい画期的なアプローチを試す</span>
+                </div>
+                <div class="option" data-question="3" data-answer="D" onclick="selectOption(3, 'D', this)">
+                    <span class="option-label">D.</span>
+                    <span class="option-text">合理的な計画を立て、より効率的で発展的なシステムに作り変える</span>
+                </div>
+                <div class="option" data-question="3" data-answer="E" onclick="selectOption(3, 'E', this)">
+                    <span class="option-label">E.</span>
+                    <span class="option-text">水辺や自然に触れたり、芸術に没頭してエネルギーを浄化する</span>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="goToPage(2)">戻る</button>
+                    <button class="btn btn-primary" id="next-3" disabled onclick="goToPage(4)">次へ</button>
+                </div>
+            </div>
+            <!-- Q4 -->
+            <div class="page" id="page-4">
+                <div class="question-number">質問 4 / 5</div>
+                <div class="question-title">Q4. 地球の社会システムにつて、どう思う？</div>
+                <div class="option" data-question="4" data-answer="A" onclick="selectOption(4, 'A', this)">
+                    <span class="option-label">A.</span>
+                    <span class="option-text">競争や暴力が多しい。もっと全員が愛と調和で繋がればいいのに</span>
+                </div>
+                <div class="option" data-question="4" data-answer="B" onclick="selectOption(4, 'B', this)">
+                    <span class="option-label">B.</span>
+                    <span class="option-text">感情的で非論理的なルールが多すぎる。もっと叡智に基づいた社会であるべきだ</span>
+                </div>
+                <div class="option" data-question="4" data-answer="C" onclick="selectOption(4, 'C', this)">
+                    <span class="option-label">C.</span>
+                    <span class="option-text">同調圧力がつよく感じる。古い枠組あ古い枠組みはさっさと手放して、個人の自由を尊重すべきだ</span>
+                </div>
+                <div class="option" data-question="4" data-answer="D" onclick="selectOption(4, 'D', this)">
+                    <span class="option-label">D.</span>
+                    <span class="option-text">効率が悪く発展途上だ。テクノロジーと精神性を融合させた先進的な社会を作りたい</span>
+                </div>
+                <div class="option" data-question="4" data-answer="E" onclick="selectOption(4, 'E', this)">
+                    <span class="option-label">E.</span>
+                    <span class="option-text">環境破壊が悲しい。地球の自然や動物たちをもっと守るべきだ</span>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="goToPage(3)">戻る</button>
+                    <button class="btn btn-primary" id="next-4" disabled onclick="goToPage(5)">次へ</button>
+                </div>
+            </div>
+            <!-- Q5 -->
+            <div class="page" id="page-5">
+                <div class="question-number">質問 5 / 5</div>
+                <div class="question-title">Q5. 最も心が落ち着き、「ホーム（故郷）」を感じる瞬間は？</div>
+                <div class="option" data-question="5" data-answer="A" onclick="selectOption(5, 'A', this)">
+                    <span class="option-label">A.</span>
+                    <span class="option-text">大切な人や動物たちと、愛と思いやりで深く心を通わせているとき</span>
+                </div>
+                <div class="option" data-question="5" data-answer="B" onclick="selectOption(5, 'B', this)">
+                    <span class="option-label">B.</span>
+                    <span class="option-text">夜空の星を見上げたり、宇宙の真理や深い知識を探求しているとき</span>
+                </div>
+                <div class="option" data-question="5" data-answer="C" onclick="selectOption(5, 'C', this)">
+                    <span class="option-label">C.</span>
+                    <span class="option-text">誰にも縛られず、リュック一つで知らない場所を冒険しているとき</span>
+                </div>
+                <div class="option" data-question="5" data-answer="D" onclick="selectOption(5, 'D', this)">
+                    <span class="option-label">D.</span>
+                    <span class="option-text">自分の直感と論理が結びつき、大きなプロジェクトや目標を達成したとき</span>
+                </div>
+                <div class="option" data-question="5" data-answer="E" onclick="selectOption(5, 'E', this)">
+                    <span class="option-label">E.</span>
+                    <span class="option-text">海を眺めているときや、美しいアートや音楽の世界に没入しているとき</span>
+                </div>
+                <div class="button-container">
+                    <button class="btn btn-secondary" onclick="goToPage(4)">戻る</button>
+                    <button class="btn btn-primary" id="next-5" disabled onclick="showResult()">診断結果を見る</button>
+                </div>
+            </div>
+            <!-- 結果ページ -->
+            <div class="page" id="page-result">
+                <div class="result-header">
+                    <div class="result-emoji" id="resultEmoji"></div>
+                    <div class="result-type" id="resultType"></div>
+                    <div class="result-subtitle" id="resultSubtitle"></div>
+                </div>
+                <div id="resultContent"></div>
+                <div class="note">
+                    ※ 重要なお知らせ<br>
+                    過去生で様々な星を転生してきているため、状況よってどのスターシードの特性が出るかは変わります。複数の星系に当てはまると感じた方は、それぞれの特性を統合した、より進化した魂である可能性が高いです。<br>
+                    基本的に多くの人が「ハイブリッド・スターシード」です。<br>
+                    ボクも「シリウス系」が起源の「プレアデス系」を旅してきて地球に辿り着いた魂だよ🐋<br><br>
+                    あなたの魂のルーツを知ることは、あなたが「なぜの地球に生に生まれてきたのか」という使命を思い出すきっかけになります。<br>
+                    自分を責めることをよて、ありのままの自分を受け入れてください。<br>
+                    あなたは、完璧なタイミングで、完璧な場所に存在しています✨
+                </div>
+                <!-- 共通の締めくくり -->
+                <div class="common-closing">
+                    <h3>💫ここまで読んでくださったあなたへ💫</h3>
+                    <p>この診断で、あなたの魂のルーツの「入り口」が見えたと思います。<br>
+                    でも、これはまだ序章に過ぎません。</p>
+
+                    <p>あななたの本当の使命、今世で出会うべき人、乗り越えるべき試練、そしてこれから訪れる人生の転換点…<br>
+                    それらすべてを知るためには、あなただけの魂の設計図を、もっと深く視る必要があります。</p>
+
+                    <div class="highlight">
+                        <h4>実は今回、特別に…</h4>
+                        <p>この診断を最後まで読んでくださった方だけに、<br>
+                        『【第一幕】ルーツ鑑定』を、限定で受け付けることにしました。</p>
+
+                        <ul>
+                            <li>あなたの生まれ持った課題</li>
+                            <li>今世で果たすべき具体的な使命</li>
+                            <li>運命の転換期がいつ訪れるのか</li>
+                            <li>あなたを待っている「ソウルファミリー」との出会い方</li>
+                            <li>今、あなたが抱えている問題の真の原因と解決策</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;">これらすべてを、ボクが直接視させていただきます。</p>
+                    </div>
+
+                    <p><strong>ただす、本気で人生を変えたい方のみ。</strong><br>
+                    冷やかしや、ただ占ってもらいたいだけの方はご遠慮ください。</p>
+
+     0              <p>なぜなら、ボクは本気で向き合うから。</p>
+
+                    <p>あなたの魂が「今こそ目覚める時だ」と叫んでいるなら、<br>
+                    この機会を見逃さないでください。</p>
+                </div>
+                <!-- LINE送信プロンプト -->
+                <div class="line-prompt">
+                    <h3>📱 この診断結果をLINEで送ってください！</h3>
+                    <p>あなたの魂のルーツがわかりました✨<br>
+                    この結果をLINEで送っていただくと、<br>
+                    <strong>さらに詳しい無料鑑定を受けられます</strong></p>
+                    <button class="line-btn" id="sendLineBtn">LINEで結果を送る</button>
+                    <p style="font-size: 14px; margin-top: 15px; opacity: 0.9;">※ ボタンをタップするとLINEアプリが開きます</p>
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 25px;" onclick="location.reload()">もう一度診断する</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 回答を保存
+        let answers = {};
+        let currentStarSystem = '';
+        // 診断データ
+        const results = {
+            'A': {
+                emoji: '✨',
+                name: 'プレアデス',
+                type: '愛と癒しの体現者',
+                subtitle: '✨プレアデス系✨',
+                content: `
+                    <div class="result-section">
+                        <h3>星系の人の特徴</h3>
+                        <p>感受性がとても豊かで、地球に愛と調和をもたらす使命を持った優しい平和主義者です。他者の痛みを自分のことのように感じ取れる、あたたかい魂の持ち主。</p>
+                        <p>プレアデス系は「宇宙の母」とも呼ばれ、争いや苦しみがある場所に光を届ける役割を担っています。あなたがそこにいるだけで、周りの人は安心感に包まれ、心が軽くなるのです。それはあなたが持つ「無条件の愛」のエネルギーが、自然と周囲に広がっているから。</p>
+                        <p>ただす、その優しさゆえに、他人の感情をスポンジのように吸収してしまい、知らないうちに自分が疲れ果てていることも。地球という重い波動の中で、あなたの繊細な魂は常に人一倍がんばっているのです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>あなたの得意なこと</h3>
+                        <p>周りの人を癒やし、安心感を与えること。人の気持ちに寄り添い、優しさと思いやりで場を和ませる才能があります。</p>
+                        <p>相手が言葉にできない感情まで察知できるあなたは、まりで心のお医者さん。悩んでいる人、傷ついている人が自然とあなたのぢとに集まってくるのは、あなたの魂が「安全な港」だと本能的にわかりからです。カウンセラー、ヒーラー、看護師、保育士など、人を癒す仕事に天職を感じる人も多いでしょう。</p>
+                        <p>また、動物や子どもとの相性も抜群。彼らはあなたの純粋な愛のエネルギーを敏感に感じ取り、心り開いてくれます。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>苦手なこと</h3>
+                        <p>争いごとや、競争の激しい環境。人に気を遣いすぎて自分を犠牲にしてしまいやすく、一人になるとどっと疲れてしまう（エンパス・HSP気質）傾向があります。</p>
+                        <p>あなたにとって最大の課題は「自分を後回しにしてしまうこと」。人を助けることに喜びを感じるあまり、自分のエネルギーが空っぽになるまで与え続けてしまいます。そして気づいたときには、心も体もボロボロ…ということも少なくありません。</p>
+                        <p>まずは自分自身を癒すことを最優先にしてください。自分の心が満たされていないと、本当の意味で人を癒すことはできないのです。定期的に一人の時間を作り、自然の中で深呼吸したり、好きな音楽を聴いたり、自分をいたわってあげてくださいね。</p>
+                        <p><strong>あなたが幸せでいることが、周りの人への最大の贈り物になります✨</strong></p>
+                    </div>
+                    <div class="happening-section">
+                        <h3>🌊あなたに今、起きていること🌊</h3>
+                        <p>最近、こんなことはありませんでしたか？</p>
+                        <ul class="happening-list">
+                            <li>ふとした瞬間に、理由もなく涙が止まらなくなる</li>
+                            <li>スーパーや人混みに行くと、どっと疲れてしまう</li>
+                            <li>「もう限界」と思っているのに、つい人のために動いてしまう</li>
+                            <li>誰かの悩みを聞いた後、なぜか自分の体調が悪くなる</li>
+                            <li>動物や子どもが、あなたにだけなついてくる</li>
+                        </ul>
+                        <p>これらはすべて、あなたのエンパス能力が目覚めているサインです。</p>
+                        <p>あなたは他人の感情エネルギーを、無意識のうちに自分の体に取り込んでしまっています。それは才能であると同時に、使い方を知らないと自分を苦しめる両刃の剣。</p>
+                        <p><strong>でも、実はあなたには…</strong></p>
+                        <p>この繊細すぎる感受性を、自分を守りながら活かす方法があります。<br>
+                        そして、あなたが本当に癒すべき相手が誰なのか。<br>
+                        あなたの魂が、今世で果たすべき「愛の使命」のすべて。</p>
+                        <p>それらを知ることで、あなたの人生は大きく変わります。</p>
+                        <p>もしあなたが「このままじゃいけない」と感じているなら、それは魂からのサイン。<br>
+                        <strong>今、あなは目覚めの入り口に立っています。</strong></p>
+                    </div>
+                `
+            },
+            'B': {
+                emoji: '🐋',
+                name: 'シリウス',
+                type: '真理と叡智の探求者',
+                subtitle: '🐋シリウス系🐋',
+                content: `
+                    <div class="result-section">
+                        <h3>星系の人の特徴</h3>
+                        <p>知的で論理的、そして精神的な真理を深く追求するタイプです。古代の知恵や科学、宇宙の仕組みに強い関心を持ち、人類の進化を静かに見守る観察者です。</p>
+                           <p>シリウス系は「宇宙の教師」と呼ばれ、高度な知識と知恵を地球にもたらす使命を持っています。あなたは物事の表面ではなく、常に「本質」を見ようとする深い眼差しを持っています。</p>
+                        <p>子どもの頃から「なぜ？」「どうして？」が口癖で、周りの大人を困らせたことがあるかもしれません。それは、あなたの魂が真実を求め、この世界の仕組みを理解したいという強い思いを持っているからです。</p>
+                        <p>哲学、心理学、スピリチュアル、古代文明など、目に見えない世界や宇宙の法則に自然と惹かれるのも、シリウス系の特徴。あなたは「知ること」を通じて、人類の意識り高めることに貢献しているのです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>あなたの得意なこと</h3>
+                        <p>物事の「本質」を見抜くこと。感情に流されず、事実と論理を組み合わせて、物事の根本的な解決策や正しい答えを導き出すのが得意です。</p>
+                        <p>周りが感情的になっている中でも、あなたは冷静に状況を見て、的確な判断を下すことができます。複雑に絡み合った問題でも、あなたの手にかかれば、まるでパズルのピースがカチッとはまるように、シンプルで明快な答えが見えてくるのです。</p>
+                        <p>研究者、教育者、カウンセラー、コンサルタントなど、論理的思考と深い洞察力が求められる分野で力を発揮します。また、スピリチュアルな知識をわかりやすく説明することも得意で、両者の橋渡しとなる存在です。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>苦手なこと</h3>
+                        <p>筋の通らない感情論や、表面的なだけの亹.�8�cyd"8�a8� �*��!��8�i��j��a8�����8���ह��8�e�.�8�dx�x�8���j8� yo-��a8�x��8��8�xह�'��A�ます。</p>
+                        <p>「みんながそう言ってるから」「昔からそうだから」という理由だけで物事が決まる状況に、あなたは強え違和感を覚えます。なぜそうなのか、本当にそれが正しいのか、常に疑問を持ち、納得できないことには従いたくないのです。</p>
+                        <p>また、感情だけで動く人や、論理的な会話ができない人との関わりは、あなたにとって大きなストレス。「なぜわかってくれないんだろう」と孤独を感じることもあるでしょう。</p>
+                        <p>でも、それでいいのです。あなたは多くの人に好かれるためではなく、真実を追求し、深い知識を必要とする人に届けるために、この地球にやってきたのですから。</p>
+                        <p><strong>同じ波長の仲間と、深く濃い対話を楽しんでください🐋</strong></p>
+                    </div>
+                    <div class="happening-section">
+                        <h3>🌌あなたに今、起きていること🌌</h3>
+                        <p>最近、こんな感覚はありませんでしたか？</p>
+                        <ul class="happening-list">
+                            <li>夜空を見上げると、なぜか「帰りたい」と感じる</li>
+                            <li>周りの人が気づかないことに、いち早く気づいてしまう</li>
+                            <li>「なぜ誰もこの矛盾に気づかないんだろう」と孤独を感じる</li>
+                            <li>古代文明、宇宙、心の仕組みなど、深い知識に自然と惹かれる</li>
+                            <li>デジャヴ（既視感）が頻繁に起こる、または予知夢を見ることがある</li>
+                        </ul>
+                        <p>これらはすべて、あなたの高次元とのつながりが強くなっているサインです。</p>
+                        <p>あなたは今、地球の波動が上がるのに合わせて、封印されていた宇宙の記憶が解放され始めています。「なんとなく知っている」感覚は、実は過去生の知恵がよみがえっているのです。</p>
+                        <p><strong>でも、実はあなたには…</strong></p>
+                        <p>あなたが地球に持ってきた宇宙からの具体的なミッションがあります。<br>
+                        そして、あなたの孤独を終わらせる「ソウルファミリー」との出会い方。<br>
+                        あなたの直感が、今後どのように人の役に立つのか。</p>
+                        <p>それらを知ることで、あなたの存在意義が明確になります。</p>
+                        <p>もしあなたが「自分は何のために生まれてきたのか」と問い続けているなら、それは魂が答えを求めている証拠。<br>
+                        <strong>今、あなたの封印が解かれようとしています。</strong></p>
+                    </div>
+                `
+            },
+            'C': {
+                emoji: '💫',
+                name: 'アンドロメダ',
+                type: '自由と革新の冒険家',
+                subtitle: '💫アンドロメダ・リラ系💫',
+                content: `
+                    <div class="result-section">
+                        <h3>星系の人の特徴</h3>
+                        <p>束縛を極端に嫌い、自由を何よりも愛する純粋な冒険家です。古いルールや常識にとらわれず、新しい世界を切り拓く「システムを壊す者（破壊者）」の役割を持っています。</p>
+                        <p>アンドロメダ・リラ系は「宇宙の革命家」。今までのやり方や古い価値観を壊し、新しい時代の扉を開く勇敢な魂です。あなたは生まれないらにして、この社会の「おかしさ」に気づいていました。</p>
+                        <p>「なんでみんな同じようなことをしてるんだろう？」「この常識、本当に正しいの？」そんな疑問を抱きながら、周りに合わせることに苦しんできたかもしれません。でもそれは、あなたが「普通」という枠に収まらない、自由な魂だからです。</p>
+                        <p>旅、冒険、未知の世界への探求心。あなたの心は常に「次の景色」を求めています。同じ場所にじっとしていることが苦痛で、変化と刺激がないと生きている実感がわかないのです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>あなたの得意なこと</h3>
+                        <p>誰もやったことがない新しいことに挑戦すること。他人の目よりも自分の真実（直感）に従って行動し、道を切り開くパイオニアとしての力があります。</p>
+                        <p>「無理」「常識外れ」と言われても、あなたは自分の直感を信じて突き進みます。そしてその結果、誰も想像していなかった素晴らしい成果を生み出すのです。</p>
+                        <p>起業家、アーティスト、冒険家、フリーランス、場所にとらわれない働き方など、今までの枠にとらわれない生き方を選ぶ人が多いのも特徴。あなたが新しい道を切り開くことで、後に続く人たちに勇気を与えているのです。</p>
+                        <p>また、直感力が非常に鋭く、「なんとなく」で選んだ道が、結果的に大正解だったということも頻繁にあるでしょう。それは宇宙があなたを導いている証拠です。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>苦手なこと</h3>
+                        <p>集団行動や「普通はこうするべき」という同調圧力。ひつの場所や古い枠組みに縛られ続けると、息苦しくなってしまいます。</p>
+                        <p>会社組織、学校、伝統的な家族のあり方など、「こうあるべき」という型にはめられることが、あなたにとって最大のストレス。ルールや規則に縛られると、まるで鳥がカゴに閉じ込められたように、魂が窒息してしまいます。</p>
+                        <p>周りからは「変わってるる」「協調性がない」と言われることもあるかもしれませんが、それは褒め言葉です。あなたは「普通」になるために生まれてきたのではなく、新しい道を示すために生まれてきたのですから。</p>
+                        <p><strong>自分の自由を守りながら、自分らしく輝いてください💫</strong></p>
+                    </div>
+                    <div class="happening-section">
+                        <h3>✨あなたに今、起きていること✨</h3>
+                        <p>最近、こんな衝動に駆られていませんか？</p>
+                        <ul class="happening-list">
+                            <li>突然、すべてを手放して「どこか遠くへ行きたい」と思う</li>
+                            <li>今の生活が、まるで自分の人生じゃないように感じる</li>
+                            <li>今までのルールや常識が、息苦しくて仕方ない</li>
+                            <li>「このままじゃダメだ」という焦りが日に日に強くなる</li>
+                            <li>夢の中で、見たこともない場所や別の人生を体験する</li>
+                        </ul>
+                        <p>これらはすべて、あなたの魂が本来の自由な生き方を思い出し始めているサインです。</p>
+                        <p>あなたは今、地球のシステムに適応するために被っていた「仮面」が、限界に達しています。魂が「もう我慢できない、本当の自分として生きたい」と叫んでいるのです。</p>
+                        <p><strong>でも、実はあなたには…</strong></p>
+                        <p>あなたが今世で本当にやるべきことのすべてがあります。<br>
+                        そして、自由に生きながらも豊かになれる、あなただけの道。<br>
+                        あなたが恐れずに飛び立つための、宇宙からの具体的なサポート。</p>
+                        <p>それらを知ることで、あなたは自分を解放できます。</p>
+                        <p>もしあなたが「もうこんな生き方は嫌だ」と感じているなら、それは魂が動き出すタイミング。<br>
+                        <strong>今、あなたの本当の人生が始まろうとしています。</strong></p>
+                    </div>
+                `
+            },
+            'D': {
+                emoji: '🪢',
+                name: 'アルクトゥルス',
+                type: '高次元の設計者',
+                subtitle: '🪢アルクトゥルス系🪢',
+                content: `
+                    <div class="result-section">
+                        <h3>星系の人の特徴</h3>
+                        <p>非常に知性が高く、カリスマ性のある生まれながらのリーダーです。論理的思考とスピリチュアルな直感を両方持ち合わせ、未来の地球をより良くするための新しい仕組みを作る使命を持っています。</p>
+                        <p>アルクトゥルス系は「宇宙の建築家」。高次元の視点から地球の未来を見通し、より進化した社会の仕組みを創造する役割を担っています。あなたは単なる夢想家ではなく、ビジョンを現実に変える実行力を持った戦略家です。</p>
+                        <p>子どもの頃から、なぜか「自分には大きな使命がある」という確信があったのではないでしょうか。それは気のせいではありません。あなたの魂は、この地球に大きな変化をもたらすために、高次元から降りてきたのです。</p>
+                        <p>論理とスピリチュアル、物質世界と精神世界、科学と直感。一見反対のように見えるものを統合し、新しい次元の答えを導き出す能力があなたにはあります。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>あなたの得意なこと</h3>
+                        <p>ビジョンを形にし、目標に向かって社会やグループを力強く引っ張っていくこと。バラバラなものをまとめて、より良い仕組みを作り上げるのが得意です。</p>
+                        <p>あなたは生まれながらのリーダー。周りの人は、あなたの明確なビジョンと揺るぎない自信に惹かれ、自然とあなたについていきたくなります。</p>
+                        <p>また、複雑な問題を全体で見る能力に優れており、「部分」ではなく「全体」を良くすることができます。経営者、プロジェクトリーダー、まちづくり、新しいビジネスを立ち上げるなど、大きな枠組みを作る仕事で力を発揮するでしょう。</p>
+                        <p>さらに、新しい技術と精神性を組み合わせる能力も持っています。ITやAIなどの最新技術を、人の幸せのために活用する方法を見出すことができるのです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>苦手なこと</h3>
+                        <p>効率の悪いやり方を続けることや、自分の直感やアイデアが制限される環境。理不尽な理由で行動をコントロールされることを嫌います。</p>
+                        <p>「昔からこうやってきたから」という理由だけで、明らかに非効率な仕組みが温存されている状況に、あなたは強いフラストレーションを感じます。もっと良い方法があるのに、なぜ変えようとしないのか、理解できないのです。</p>
+                        <p>また、あなたの先を行くアイデアは、時に周りの人には理解されないこともあります。「夢物語だ」「現実的じゃない」と言われて、悔しい思いをしたことがあるかもしれません。</p>
+                        <p>でも、歴史を変えてきたのは、いつも「時代の先を行く人」です。あなたのビジョンは、今の地球には早すぎるだけ。いずれ時代があなたに追いつきます。</p>
+                        <p><strong>自分の直感を信じ、未来を創造し続けてください🪢</strong></p>
+                    </div>
+                    <div class="happening-section">
+                        <h3>🔮あなたに今、起きていること🔮</h3>
+                        <p>最近、こんな感覚はありませんでしたか？</p>
+                        <ul class="happening-list">
+                            <li>「自分には大きな使命がある」という確信が、日に日に強くなる</li>
+                            <li>周りの人が気づいていない「未来の流れ」が見える</li>
+                            <li>小さなことに時間を使うのが、もったあなく感じる</li>
+                            <li>ふとした瞬間に、壮大なビジョンが降りてくる</li>
+                            <li>「今動かなければ」とう強い衝動に駆られる</li>
+                        </ul>
+                           <p>これらはすべて、あなたのリーダーシップとしての目覚めが加速しているサインです。</p>
+                        <p>あなたは今、宇宙から「動き出す時が来た」というサインを受け取り始めています。あなたの魂は、もう準備期間を終えて、実行するフェーズに入ろうとしているのです。</p>
+                        <p><strong>でも、実はあなたには…</strong></p>
+                        <p>あなたが今世で具体的に成し遂げるべきことの輪郭があります。<br>
+                        そして、あなたのビジョンを現実にするために集まってくる「運命の協力者」たち。<br>
+                        あなたがこれから迎える、人生の大きな転換点のタイミング。</p>
+                        <p>それらを知ることで、あなたは迷いなく進めます。</p>
+                        <p>もしあなたが「何か大きなことをしなければ」と感じているなら、それは宇宙からのゴーサイン。<br>
+                        <strong>今、あなたの時代が始まろうとしています。</strong></p>
+                    </div>
+                `
+            },
+            'E': {
+                emoji: '💎',
+                name: 'ベガ',
+                type: '自然と芸術の守り人',
+                subtitle: '💎ベガ系💎',
+                content: `
+                    <div class="result-section">
+                        <h3>星系の人の特徴</h3>
+                        <p>地球の自然や水、海の生き物（イルカやクジラなど）に強く惹かれる、非常に優しく芸術的な魂です。宇宙のインスピレーションを地球に届けるクリエイターです。</p>
+                        <p>ベガ系は「宇宙の芸術家」。美しさ、調和、創造性を通じて、地球に高次元のエネルギーを届ける使命を持っています。あなたは五感が非常に鋭く、普通の人が気づかないような繊細な美しさを感じ取ることができます。</p>
+                        <p>海を見るとなぜか涙が出る、森の中にいると魂が喜ぶ、イルカやクジラに特別な親近感を覚える…それは、あなたの魂が地球の自然と深くつながっている証拠です。</p>
+                        <p>また、音楽、絵画、ダンス、詩、写真など、何らかの芸術表現を通じて自分の内側を表現したいという強い衝動を持っているでしょう。それはあなたが、言葉では伝えきれない高次元のメッセージを、アートという形で地球に届けるメッセンジャーだからです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>あなたの得意なこと</h3>
+                        <p>音楽やアート、独自の感性を通じて世界観を表現するこ。自然や動植物、生態系と深く共鳴し、環境のエネルギーを浄化する力を持っています。</p>
+                        <p>あなたが創り出す作品や、あなたが存在する空間には、独特の美しいエネルギーが宿ります。それは、あなたが高次元の波動を、この三次元の世界に翻訳しているからです。</p>
+                        <p>アーティスト、音楽家、デザイナー、庭師、環境活動家、動物セラピストなど、美と自然に関わる仕事で才能を発揮します。また、あなたがいるだけで、その場のエネルギーが浄化され、人々が癒げされるという不思議な力も持っています。</p>
+                        <p>さらに、植物や動物とのコミュニケーション能力も高く、彼らの「声」を聞き取ることができます。ペットや植物が、あなたにだけ特別な反応を示すのはそのためです。</p>
+                    </div>
+                    <div class="result-section">
+                        <h3>苦手なこと</h3>
+                        <p>自然から切り離された人工的すぎる環境や、環境破壊。自分の中にある美しい感性が理解されないような、荒々しい場所も苦手です。</p>
+                        <p>コンクリートだらけの都会や、緑のないオフィス、騒音と人工的な光に溢れた空間は、あなたの繊細な魂を疲れさせます。定期的に自然の中で過ごす時間を作らないと、心身のバランスを崩してしまうでしょう。</p>
+                        <p>また、環境破壊や動物虐待のニュースを見ると、まりで自分が傷つけられたかのように深く痛みを感じます。それは、あなたが地球の生命すべてとつながっているからです。</p>
+                        <p>あなたの美しい感性は、この荒々しい世界には繊細すぎるかもしれません。でも、だからこそ価値があるのです。あなたが創り出す美しさが、この世界に必要なのです。</p>
+                        <p><strong>自分の感性を大切に守りながら、あなたにしか表現できない世界を、この地球に届けてください💎</strong></p>
+                    </div>
+                    <div class="happening-section">
+                        <h3>🌊あなたに今、起きていること🌊</h3>
+                        <p>最近、ころなことはありませろでしたか？</p>
+                        <ul class="happening-list">
+                            <li>海や自然の中にいると、涙が溢れてくる</li>
+                            <li>環境破壊や動物のニュースを見ると、胸が締め付けられる</li>
+                            <li>何かを「創りたい」という衝動が、抑えられない</li>
+                            <li>音楽や芸術に触れると、魂が震える</li>
+                            <li>イルカやクジラの画像や動画に、異常なほど惹かれる</li>
+                        </ul>
+                        <p>これらはすべて、あなたのクリエイター・ヒーラーとしての本質が目覚め始めているサインです。</p>
+                        <p>あなたは今、地球の波動が上がるのに合わせて、封印されていた「美と調和を創造する力」が解放されようとしています。あなたの中ある創造性は、ただの趣味ではなく、地球を癒すための神聖なギフトなのですす。</p>
+                        <p><strong>でも、実はあなたには…</strong></p>
+                        <p>あなたが今世で表現すべき作品やメッセージの本質があります。<br>
+                        そして、あなたの感性を理解し、応援してくれる「ソウルメイト」との出会い方。<br>
+                        あなたの創造性が、どのように地球の癒しに役立つのか。</p>
+                        <p>それらを知ることで、あなたは自分の道を歩み始めます。</p>
+                        <p>もしあなたが「何かを表現したい」と感じているなら、それは魂からの創造の叫び。<br>
+                        <strong>今、あなたの中の芸術家が目覚めようとしています。</strong></p>
+                    </div>
+                `
+            }
+        };
+        // ページ遷移
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            if (pageNum === 0) {
+                document.getElementById('page-intro').classList.add('active');
+                updateProgress(0);
+            } else {
+                document.getElementById(`page-${pageNum}`).classList.add('active');
+                updateProgress(pageNum * 20);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // プログレスバー更新
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+        // 選択肢の選択
+        function selectOption(questionNum, answer, element) {
+            // 同じ質問の他の選択肢を解除
+            document.querySelectorAll(`[data-question="${questionNum}"]`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // 選択
+            element.classList.add('selected');
+            answers[questionNum] = answer;
+
+            // 次へボタンを有効化
+            document.getElementById(`next-${questionNum}`).disabled = false;
+        }
+        // 診断結果を計算
+        function calculateResult() {
+            const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+
+            Object.values(answers).forEach(answer => {
+                counts[answer]++;
+            });
+
+            let maxCount = 0;
+            let maxAnswer = '';
+
+            for (let key in counts) {
+                if (counts[key] > maxCount) {
+                    maxCount = counts[key];
+                    maxAnswer = key;
+                }
+            }
+
+            return maxAnswer;
+        }
+        // 診断結果を表示
+        function showResult() {
+            const resultType = calculateResult();
+            const result = results[resultType];
+
+            currentStarSystem = result.name;
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultType').textContent = result.type;
+            document.getElementById('resultSubtitle').textContent = result.subtitle;
+            document.getElementById('resultContent').innerHTML = result.content;
+
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-result').classList.add('active');
+
+            updateProgress(100);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // LINE送信ボタン
+        document.getElementById('sendLineBtn').addEventListener('click', function() {
+            const message = currentStarSystem;
+            const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+            const lineOfficialUrl = 'https://lin.ee/Rx0Hxeza';
+
+            window.location.href = lineUrl;
+
+            setTimeout(function() {
+                const userConfirm = confirm('LINEアプリが開きましたか？\n\n開かなかった場合は「OK」を押して、LINE公式アカウントのトーク画面を開いてください。');
+                if (userConfirm) {
+                    window.open(lineOfficialUrl, '_blank');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
